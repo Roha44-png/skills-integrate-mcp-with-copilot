@@ -89,8 +89,10 @@ def get_activities():
 
 
 @app.post("/activities/{activity_name}/signup")
-def signup_for_activity(activity_name: str, email: str):
-    """Sign up a student for an activity"""
+def signup_for_activity(activity_name: str, email: str, admin: bool = False):
+    """Sign up a student for an activity (admin only)"""
+    if not admin:
+        raise HTTPException(status_code=403, detail="Admin login required to sign up participants.")
     # Validate activity exists
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
@@ -111,8 +113,10 @@ def signup_for_activity(activity_name: str, email: str):
 
 
 @app.delete("/activities/{activity_name}/unregister")
-def unregister_from_activity(activity_name: str, email: str):
-    """Unregister a student from an activity"""
+def unregister_from_activity(activity_name: str, email: str, admin: bool = False):
+    """Unregister a student from an activity (admin only)"""
+    if not admin:
+        raise HTTPException(status_code=403, detail="Admin login required to unregister participants.")
     # Validate activity exists
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
